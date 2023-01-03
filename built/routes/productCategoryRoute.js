@@ -1,0 +1,10 @@
+var express = require("express");
+var _a = require("../controller/productCategoryCtrl"), createCategory = _a.createCategory, updateCategory = _a.updateCategory, deleteCategory = _a.deleteCategory, getCategory = _a.getCategory, getAllCategory = _a.getAllCategory;
+var _b = require("../middlewares/authMiddleware"), authMiddleware = _b.authMiddleware, isAdmin = _b.isAdmin;
+var router = express.Router();
+router.post('/', authMiddleware, isAdmin, createCategory);
+router.put('/:id', authMiddleware, isAdmin, updateCategory);
+router.delete('/:id', authMiddleware, isAdmin, deleteCategory);
+router.get('/:id', getCategory);
+router.get('/', getAllCategory);
+module.exports = router;

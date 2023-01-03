@@ -1,0 +1,10 @@
+var express = require("express");
+var _a = require("../controller/brandCtrl"), createBrand = _a.createBrand, updateBrand = _a.updateBrand, deleteBrand = _a.deleteBrand, getBrand = _a.getBrand, getAllBrand = _a.getAllBrand;
+var _b = require("../middlewares/authMiddleware"), authMiddleware = _b.authMiddleware, isAdmin = _b.isAdmin;
+var router = express.Router();
+router.post('/', authMiddleware, isAdmin, createBrand);
+router.put('/:id', authMiddleware, isAdmin, updateBrand);
+router.delete('/:id', authMiddleware, isAdmin, deleteBrand);
+router.get('/:id', getBrand);
+router.get('/', getAllBrand);
+module.exports = router;

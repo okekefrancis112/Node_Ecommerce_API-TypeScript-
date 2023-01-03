@@ -1,0 +1,14 @@
+var express = require("express");
+var router = express.Router();
+var _a = require("../middlewares/authMiddleware"), isAdmin = _a.isAdmin, authMiddleware = _a.authMiddleware;
+var _b = require("../controller/productCtrl"), createProduct = _b.createProduct, getProduct = _b.getProduct, getAllProducts = _b.getAllProducts, updateProduct = _b.updateProduct, deleteProduct = _b.deleteProduct, addToWishlist = _b.addToWishlist, rating = _b.rating, uploadImages = _b.uploadImages;
+var _c = require("../middlewares/uploadImages"), uploadPhoto = _c.uploadPhoto, productImgSize = _c.productImgSize, productImgResize = _c.productImgResize;
+router.post('/', authMiddleware, isAdmin, createProduct);
+router.put('/upload/:id', authMiddleware, isAdmin, uploadPhoto.array("images", 10), productImgResize, uploadImages);
+router.put('/wishlist', authMiddleware, addToWishlist);
+router.put('/rating', authMiddleware, rating);
+router.get('/:id', getProduct);
+router.put('/:id', authMiddleware, isAdmin, updateProduct);
+router.delete('/:id', authMiddleware, isAdmin, deleteProduct);
+router.get('/', getAllProducts);
+module.exports = router;
