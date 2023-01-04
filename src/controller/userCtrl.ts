@@ -35,32 +35,32 @@ const createUser = asyncHandler(async(req:Request, res:Response) => {
 
 
 // Login User
-const loginUserCtrl = asyncHandler(async (req:any, res:any) => {
+const loginUserCtrl = asyncHandler(async (req:Request, res:Response) => {
     const { email, password } = req.body;
     // Check if user exists or not
 
-    const findUser = await User.findOne({ email });
+    const findUser:any = await User.findOne({ email });
 
     if (findUser && await isPasswordMatched(password, findUser.password)) {
-        // const refreshToken = generateRefreshToken(findUser?._id);
+        const refreshToken:any = generateRefreshToken(findUser._id);
         const updateuser = await User.findByIdAndUpdate(
             findUser.id,
             {
-            // refreshToken: refreshToken,
+            refreshToken: refreshToken,
         },
         { new: true }
         );
-        // res.cookie("refreshToken", refreshToken, {
-        //     httpOnly: true,
-        //     maxAge: 72 * 60 * 60 * 1000,
-        // });
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            maxAge: 72 * 60 * 60 * 1000,
+        });
         res.json({
-            _id: findUser?._id,
-            firstname: findUser?.firstname,
-            lastname: findUser?.lastname,
-            email: findUser?.email,
-            mobile: findUser?.mobile,
-            // token: generateToken(findUser?._id),
+            _id: findUser._id,
+            firstname: findUser.firstname,
+            lastname: findUser.lastname,
+            email: findUser.email,
+            mobile: findUser.mobile,
+            token: generateToken(findUser._id),
         });
     } else {
         throw new Error ("Invalid Credentials.");
@@ -76,30 +76,31 @@ const loginAdmin = asyncHandler(async (req:Request, res:Response) => {
     // Check if user exists or not
 
     const findAdmin:any = await User.findOne({ email });
-    console.log(email)
+    console.log(findAdmin)
 
     if (findAdmin.role !== 'admin') throw new Error("Not Authorised.");
 
     if (findAdmin && await isPasswordMatched(password, findAdmin.password)) {
-        const refreshToken = generateRefreshToken(findAdmin?._id);
+
+        const refreshToken:any = generateRefreshToken(findAdmin._id);
         const updateuser = await User.findByIdAndUpdate(
             findAdmin.id,
             {
             refreshToken: refreshToken,
         },
-        { new: true }
-        );
+        { new: true });
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             maxAge: 72 * 60 * 60 * 1000,
         });
+
         res.json({
-            _id: findAdmin?._id,
-            firstname: findAdmin?.firstname,
-            lastname: findAdmin?.lastname,
-            email: findAdmin?.email,
-            mobile: findAdmin?.mobile,
-            token: generateToken(findAdmin?._id),
+            _id: findAdmin._id,
+            firstname: findAdmin.firstname,
+            lastname: findAdmin.lastname,
+            email: findAdmin.email,
+            mobile: findAdmin.mobile,
+            token: generateToken(findAdmin._id),
         });
     } else {
         throw new Error ("Invalid Credentials.");

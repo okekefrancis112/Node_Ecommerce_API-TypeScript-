@@ -11,6 +11,18 @@ interface methods {
     expiresIn : Number
   }
 
+//   [
+//     '_mongooseOptions',   '_transforms',
+//     '_hooks',             '_executionStack',
+//     'mongooseCollection', 'model',
+//     'schema',             'op',
+//     'options',            '_conditions',
+//     '_fields',            '_update',
+//     '_path',              '_distinct',
+//     '_collection',        '_traceFunction',
+//     '$useProjection'
+//   ]
+
 
 const authMiddleware = asyncHandler( async (req:any, res:any, next:any) => {
     let token;
@@ -21,15 +33,10 @@ const authMiddleware = asyncHandler( async (req:any, res:any, next:any) => {
             if(token) {
 
                 const decoded =  jwt.verify(token, process.env.JWT_SECRET || '') as methods;
-                // console.log(decoded);
-                const user = User.findById(decoded.id);
-                const { id } = user
-                // console.log(id);
-                req.user = user;
-                // console.log(req.user);
-                // const { _id } = req.user
+                const user:any = await User.findById(decoded.id);
+                // const { _id } = user
                 // console.log(_id);
-
+                req.user = user;
                 next();
             }
         } catch (error) {
@@ -47,7 +54,6 @@ const isAdmin = asyncHandler(async (req:any, res:any, next:any) => {
     const adminUser:any = User.findOne({ email: email });
     if (adminUser.role !== 'admin') {
         throw new Error("You are not an admin.");
-
     } else {
         next();
     }

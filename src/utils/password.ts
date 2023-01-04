@@ -4,9 +4,6 @@ import crypto from 'crypto';
 
 
 export const isPasswordMatched = async (enteredPassword:string, userPassword:string) => {
-    console.log(enteredPassword);
-    console.log(userPassword);
-
     return await bcrypt.compare(enteredPassword, userPassword);
 };
 
